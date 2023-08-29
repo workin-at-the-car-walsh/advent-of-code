@@ -49,10 +49,10 @@ else:
     print("input file already exists, continuing")
 
 with open(input_file, "r") as f:
-    match_list = f.readlines()
+    match_lines = f.readlines()
     f.close()
 
-match_list2 = [x.split() for x in match_list]
+match_list = [x.split() for x in match_lines]
 
 def map_to_numbers(x):
     opponent = ["A", "B", "C"]
@@ -64,7 +64,7 @@ def calc_result(x):
 
 # m = map(map_to_numbers, test)
 
-m = map(map_to_numbers, match_list2)
+m = map(map_to_numbers, match_list)
 num_list = list(m)
 
 m1 = map(calc_result, num_list)
@@ -73,9 +73,11 @@ result_list = list(m1)
 # edit result values for those that fall outside
 # the general formula
 match_scores = [0 + x[0] if x[1]==9 
-           else 6 + x[0] if x[1]==-3
-           else x[1] + x[0] for x in result_list]
+                else 6 + x[0] if x[1]==-3
+                else x[1] + x[0] 
+                for x in result_list]
 
+# solution answer
 sum(match_scores)
 
 """
@@ -94,7 +96,7 @@ def map_to_numbers_p2(x):
     return [opponent.index(x[0]) + 1, match_result.index(x[1]) * 3]
 
 #m2 = map(map_to_numbers_p2, test)
-m2 = map(map_to_numbers_p2, match_list2)
+m2 = map(map_to_numbers_p2, match_list)
 num_list_p2 = list(m2)
 
 m3 = map(calc_decision, num_list_p2)
@@ -104,9 +106,11 @@ result_list_p2 = list(m3)
 # edit raw choice values for results that fall outside
 # the standard formula
 match_scores_p2 = [3 + x[1] if x[0]==0 
-           else 1 + x[1] if x[0]==4
-           else x[1] + x[0] for x in result_list_p2]
+                    else 1 + x[1] if x[0]==4
+                    else x[1] + x[0] 
+                    for x in result_list_p2]
 
+# solution answer
 sum(match_scores_p2)
 
 """

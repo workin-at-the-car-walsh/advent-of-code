@@ -61,6 +61,7 @@ res = [item_list[i: j] for i, j in
 	zip([0] + idx_list, idx_list +
 		([size] if idx_list[-1] != size else []))]
 
+# create a list of lists of elf items, one list for each elf
 res1 = []
 for elf in res:
     elf_items = []
@@ -69,16 +70,19 @@ for elf in res:
             elf_items.append(item.replace("\n", ""))
     res1.append(elf_items)
 
-#print("The list after splitting by a value : " + str(res1))
+# create a list of instances of the Elf class, with their items
 elves = []
 for elf_items in res1:
     elf = Elf(elf_items)
     elves.append(elf)
 
+# list of total calories for each elf
 cal_totals = [x.total_calories() for x in elves]
 
+# elf with most calories
 most_cals = max(cal_totals)
 
+# solution answer
 print(most_cals)
 
 """
@@ -86,7 +90,10 @@ Part 2
 """
 import heapq
 
+# get top 3 elves with calories
 top_three = heapq.nlargest(3, cal_totals)
+
+# solution answer
 print(sum(top_three))
 
 """
