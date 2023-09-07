@@ -29,7 +29,7 @@ Advent of code 2022 day 5
 
 
 """
-test = 'test2'
+test = 'test'
 with open(input_file, "r") as f:
     lines = f.readlines()
     f.close()
@@ -78,7 +78,7 @@ z[0] = 1
 z[-1] = 1
 z[:, 0] = 1
 z[:, -1] = 1
-print(z)
+#print(z)
 print(np.sum(z == 1))
 
 """
@@ -88,4 +88,66 @@ no idea whether this is more powerful than
 list operations if this problem was to scale
 
 """
+z2 = np.empty_like(a)
 
+winner = 0
+it2 = np.nditer([a, z2], flags=['multi_index'], op_flags=['readwrite', 'allocate'])
+for x, y in it2:
+    r_idx = it2.multi_index[0]
+    c_idx = it2.multi_index[1]
+    # check if row has a bigger tree
+    # after = [row_index, col_idx+1:]
+    # before = [row_index, :col_idx]
+    before_row = np.copy(a[r_idx, :c_idx])[::-1]
+    br_score = 1
+    for tree in before_row[:-1]:
+        if tree < x:
+            br_score += 1
+        else:
+            break
+    after_row = np.copy(a[r_idx, c_idx+1:])
+    ar_score = 1
+    for tree in after_row[:-1]:
+        if tree < x:
+            ar_score += 1
+        else:
+            break
+    del after_row
+    del before_row
+    # check if column has a bigger tree
+    # after = [r_idx+1:, c_idx]
+    # before = [:r_idx, c_idx]  # a[1:, 1][::-1]
+    before_col = np.copy(a[:r_idx, c_idx])[::-1]
+    bc_score = 1
+    for tree in before_col[:-1]:
+        if tree < x:
+            bc_score += 1
+        else:
+            break
+    after_col = np.copy(a[r_idx+1:, c_idx]) #np.copy(a[:r_idx, c_idx])
+    ac_score = 1
+    for tree in after_col[:-1]:
+        if tree < x:
+            ac_score += 1
+        else:
+            break
+    del before_col
+    del after_col
+    score = br_score*ar_score*bc_score*ac_score
+    y[...] = score
+    
+    if score > winner:
+        winner = score
+        print(br_score, ar_score, bc_score, ac_score)
+        print(score)
+        print(r_idx, c_idx)
+    del score
+    del br_score, ar_score, bc_score, ac_score
+
+print(winner)
+
+"""
+the code doesnt remove the efge trees from consideration
+but it is unlikely one of them will have
+the best score so it doesnt matter for this problem
+"""
